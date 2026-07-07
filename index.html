@@ -318,6 +318,23 @@
   .proj-media{position:relative;aspect-ratio:4/3;overflow:hidden;background:linear-gradient(135deg, var(--navy-raised), var(--navy));}
   .proj-media img{width:100%;height:100%;object-fit:cover;filter:saturate(0.85) contrast(1.02);transition:transform .6s cubic-bezier(.2,.8,.2,1), filter .4s;}
   .proj-card:hover .proj-media img{transform:scale(1.06);filter:saturate(1.05) contrast(1.05);}
+  /* Behance embed crop: the iframe is oversized + shifted up so only the cover-image
+     region of Behance's widget shows; the title/stats footer bar gets pushed below
+     the visible crop line. Tune --embed-scale and --embed-shift per-card if a
+     particular project's crop looks off once you see it live. */
+  .proj-embed-crop{
+    position:relative;width:100%;height:100%;overflow:hidden;pointer-events:none;
+    --embed-scale:1.34; --embed-shift:-9%;
+  }
+  .proj-embed-crop iframe{
+    position:absolute;left:50%;top:0;
+    width:calc(100% * var(--embed-scale));height:calc(100% * var(--embed-scale));
+    transform:translate(-50%, var(--embed-shift));
+    border:0;pointer-events:none;
+    transition:transform .6s cubic-bezier(.2,.8,.2,1);
+    filter:saturate(0.85) contrast(1.02);
+  }
+  .proj-card:hover .proj-embed-crop iframe{filter:saturate(1.05) contrast(1.05);}
   .proj-media img.img-error{display:none;}
   .proj-fallback{
     position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:10px;
@@ -804,16 +821,16 @@
 
   // ---------- Projects (Behance) ----------
   const projects = [
-    {title:"PayMechanic — App Design Flow", img:"https://mir-s3-cdn-cf.behance.net/projects/404/84113c252128039.Y3JvcCwxOTIwLDE1MDEsMCww.png", url:"https://www.behance.net/gallery/252128039/PayMechanic-app-design-flow", views:"279", appr:"11", tag:"FINTECH"},
-    {title:"Manipal University — Landing Page", img:"https://mir-s3-cdn-cf.behance.net/projects/404/4befdf251537445.Y3JvcCwxMzgwLDEwODAsMzQsMA.png", url:"https://www.behance.net/gallery/251537445/Manipal-university-landing-page-design", views:"33", appr:"11", tag:"WEB"},
-    {title:"English Learning App — Case Study", img:"https://mir-s3-cdn-cf.behance.net/project_modules/1400/94b1a1234797509.68ca8336cc1b9.png", url:"https://www.behance.net/gallery/234797509/English-learning-app-Case-study", views:"43", appr:"0", tag:"EDUCATION"},
-    {title:"Landing Page Redesign", img:"https://mir-s3-cdn-cf.behance.net/projects/max_808/5c065f249137541.Y3JvcCwxMTI1LDg4MCwzNiww.png", url:"https://www.behance.net/gallery/249137541/Landing-Page-Redesign", views:"11", appr:"0", tag:"WEB"},
-    {title:"Dish Dash — Recipe App Prototype", img:"https://mir-s3-cdn-cf.behance.net/projects/404/fe197d177263559.Y3JvcCw4MDgsNjMyLDAsMA.jpg", url:"https://www.behance.net/gallery/177263559/Dish-Dash-recipe-app-prototype", views:"37", appr:"1", tag:"MOBILE"},
-    {title:"Billing App Design", img:"https://mir-s3-cdn-cf.behance.net/projects/404/0a0090194566947.Y3JvcCwxOTIwLDE1MDEsMCww.jpg", url:"https://www.behance.net/gallery/194566947/Billing-App-Design", views:"62", appr:"3", tag:"MOBILE"},
-    {title:"Finance & Digital Wallet App", img:"https://mir-s3-cdn-cf.behance.net/projects/404/11cc78192895141.Y3JvcCwxOTIwLDE1MDEsMCw4NQ.jpg", url:"https://www.behance.net/gallery/192895141/Finance-Digital-wallet-app", views:"43", appr:"3", tag:"FINTECH"},
-    {title:"Meno — Pause Testing App", img:"https://mir-s3-cdn-cf.behance.net/projects/404/681040238269689.Y3JvcCw4MDgsNjMyLDAsMA.png", url:"https://www.behance.net/gallery/238269689/Meno-pause-testing-app", views:"20", appr:"0", tag:"HEALTHCARE"},
-    {title:"Task Management Design", img:"https://mir-s3-cdn-cf.behance.net/projects/404/850291194716171.Y3JvcCwxNDM1LDExMjIsMTM4LDA.jpg", url:"https://www.behance.net/gallery/194716171/Task-Management-design", views:"34", appr:"2", tag:"PRODUCTIVITY"},
-    {title:"Nutrio Box — Branding Project", img:"https://mir-s3-cdn-cf.behance.net/projects/404/930189248686985.Y3JvcCwxMzgyLDEwODEsMjcwLDA.png", url:"https://www.behance.net/gallery/248686985/Nutrio-box-branding-project", views:"5", appr:"0", tag:"BRANDING"},
+    {title:"PayMechanic — App Design Flow", behanceId:"252128039", url:"https://www.behance.net/gallery/252128039/PayMechanic-app-design-flow", views:"279", appr:"11", tag:"FINTECH"},
+    {title:"Manipal University — Landing Page", behanceId:"251537445", url:"https://www.behance.net/gallery/251537445/Manipal-university-landing-page-design", views:"33", appr:"11", tag:"WEB"},
+    {title:"English Learning App — Case Study", behanceId:"234797509", url:"https://www.behance.net/gallery/234797509/English-learning-app-Case-study", views:"43", appr:"0", tag:"EDUCATION"},
+    {title:"Landing Page Redesign", behanceId:"249137541", url:"https://www.behance.net/gallery/249137541/Landing-Page-Redesign", views:"11", appr:"0", tag:"WEB"},
+    {title:"Dish Dash — Recipe App Prototype", behanceId:"177263559", url:"https://www.behance.net/gallery/177263559/Dish-Dash-recipe-app-prototype", views:"37", appr:"1", tag:"MOBILE"},
+    {title:"Billing App Design", behanceId:"194566947", url:"https://www.behance.net/gallery/194566947/Billing-App-Design", views:"62", appr:"3", tag:"MOBILE"},
+    {title:"Finance & Digital Wallet App", behanceId:"192895141", url:"https://www.behance.net/gallery/192895141/Finance-Digital-wallet-app", views:"43", appr:"3", tag:"FINTECH"},
+    {title:"Meno — Pause Testing App", behanceId:"238269689", url:"https://www.behance.net/gallery/238269689/Meno-pause-testing-app", views:"20", appr:"0", tag:"HEALTHCARE"},
+    {title:"Task Management Design", behanceId:"194716171", url:"https://www.behance.net/gallery/194716171/Task-Management-design", views:"34", appr:"2", tag:"PRODUCTIVITY"},
+    {title:"Nutrio Box — Branding Project", behanceId:"248686985", url:"https://www.behance.net/gallery/248686985/Nutrio-box-branding-project", views:"5", appr:"0", tag:"BRANDING"},
   ];
 
   const grid = document.getElementById('work-grid');
@@ -823,10 +840,8 @@
     card.href = p.url; card.target = '_blank'; card.rel = 'noopener';
     card.innerHTML = `
       <div class="proj-media">
-        <img src="${p.img}" alt="${p.title}" loading="lazy" referrerpolicy="no-referrer">
-        <div class="proj-fallback">
-          <svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="1.5" fill="none" stroke="var(--cyan-dim)" stroke-width="1.4"/><circle cx="11" cy="13" r="2.5" fill="none" stroke="var(--cyan-dim)" stroke-width="1.4"/><path d="M6 23 L13 16 L18 20 L26 11" fill="none" stroke="var(--amber)" stroke-width="1.4"/></svg>
-          <span>${p.tag}</span>
+        <div class="proj-embed-crop">
+          <iframe src="https://www.behance.net/embed/project/${p.behanceId}?ilo0=1" title="${p.title}" loading="lazy" allowfullscreen frameborder="0" allow="clipboard-write" referrerpolicy="strict-origin-when-cross-origin" tabindex="-1"></iframe>
         </div>
         <div class="proj-frame-tag">FRAME / ${String(i+1).padStart(2,'0')}</div>
         <div class="proj-dims">${p.tag}</div>
@@ -837,21 +852,6 @@
         <div class="proj-cta"><span>View case study on Behance</span><span>↗</span></div>
       </div>
     `;
-    const img = card.querySelector('img');
-    const media = card.querySelector('.proj-media');
-    let settled = false;
-    img.addEventListener('load', ()=>{ settled = true; media.classList.remove('show-fallback'); img.classList.remove('img-error'); });
-    img.addEventListener('error', ()=>{
-      settled = true;
-      img.classList.add('img-error');
-      media.classList.add('show-fallback');
-    });
-    setTimeout(()=>{
-      if(!settled && (!img.complete || img.naturalWidth === 0)){
-        img.classList.add('img-error');
-        media.classList.add('show-fallback');
-      }
-    }, 3500);
     grid.appendChild(card);
     io.observe(card);
   });
